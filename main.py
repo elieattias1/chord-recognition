@@ -69,7 +69,7 @@ def record_audio(stream, wf, rate, chunk, record_seconds, templates, chords):
 
 def main():
     chord_type = parse_arguments()
-    print(f"Chord type: {chord_type}")
+    print(f"Detecting {chord_type} chords")
 
     CHUNK = 1024 * 8  # Increased buffer size
     FORMAT = pyaudio.paInt16

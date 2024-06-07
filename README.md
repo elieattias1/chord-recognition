@@ -50,13 +50,14 @@ Run the script with the following command to recognize major chords:
 
 ```sh
 python main.py --chord_type major
-
+```
 or 
 
 ```sh
 python main.py --chord_type minor
-
+```
 or to recognize both major and minor chords :
 
 ```sh
 python main.py --chord_type all
+```

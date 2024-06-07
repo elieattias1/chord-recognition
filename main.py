@@ -3,6 +3,7 @@ import numpy as np
 import pyaudio
 import wave
 import sys
+import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from utils import get_major_templates, recognize_chord, get_chord_templates
@@ -15,6 +16,8 @@ def parse_arguments():
     parser.add_argument(
         "--major", action="store_true", help="Specify if the chord is major"
     )
+    if not os.path.exists("recorded"):
+        os.makedirs("recorded")
     args = parser.parse_args()
     chord_type = "major" if args.major else "minor"
     return chord_type
@@ -85,7 +88,7 @@ def main():
         else get_major_templates()
     )
 
-    with wave.open("/recorded/output.wav", "wb") as wf:
+    with wave.open("recorded/output.wav", "wb") as wf:
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(p.get_sample_size(FORMAT))
         wf.setframerate(RATE)

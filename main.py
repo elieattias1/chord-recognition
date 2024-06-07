@@ -15,7 +15,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--chord_type",
-        default="major",
+        default="all",
         type=str,
         help="Specify if you wish to recognize major, minor or all types of chords",
     )

@@ -4,6 +4,7 @@ import librosa
 
 def get_major_templates():
     "templates for major 7 chords"
+    chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     arr = np.array(
         [  # C, C# D, D# E, F, F# G, G# A, A# B
             [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],  # C
@@ -22,11 +23,25 @@ def get_major_templates():
     )
 
     norms = np.linalg.norm(arr, axis=0)
-    return arr / norms
+    return arr / norms, chords
 
 
 def get_minor_templates():
     "templates for major 7 chords"
+    chords = [
+        "Cm",
+        "C#m",
+        "Dm",
+        "D#m",
+        "Em",
+        "Fm",
+        "F#m",
+        "Gm",
+        "G#m",
+        "Am",
+        "A#m",
+        "Bm",
+    ]
     arr = np.array(
         [  # C, C# D, D# E, F, F# G, G# A, A# B
             [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],  # C
@@ -45,18 +60,22 @@ def get_minor_templates():
     )
 
     norms = np.linalg.norm(arr, axis=0)
-    return arr / norms
+    return arr / norms, chords
 
 
 def get_chord_templates(chord_type="major"):
     if chord_type == "major":
         return get_major_templates()
-    else:
+    elif chord_type == "minor":
         return get_minor_templates()
+    else:
+        major, chords_major = get_major_templates()
+        minor, chords_minor = get_minor_templates()
+        all_chords = chords_major + chords_minor
+        return np.concatenate((major, minor), axis=0), all_chords
 
 
-def get_match(templates, chroma_vector):
-    chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+def get_match(templates, chroma_vector, chords):
     similarities = templates @ chroma_vector
     # print(similarities)
     match = np.argmax(similarities)
@@ -67,7 +86,7 @@ def normalize_chroma(chroma):
     return chroma / np.linalg.norm(chroma)
 
 
-def recognize_chord(y, sr, templates):
+def recognize_chord(y, sr, templates, chords):
     if y.max() - y.min() < 0.01:
         return "silence", np.zeros((12, 1))
     chroma_cq = librosa.feature.chroma_cqt(
@@ -77,5 +96,5 @@ def recognize_chord(y, sr, templates):
     mean_chroma = np.mean(chroma_cq, axis=1)
     mean_chroma = normalize_chroma(mean_chroma)
 
-    match = get_match(templates, mean_chroma)
+    match = get_match(templates, mean_chroma, chords)
     return match, chroma_cq

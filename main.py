@@ -14,12 +14,12 @@ def parse_arguments():
         description="Determine the type of chord (major or minor)"
     )
     parser.add_argument(
-        "--major", action="store_true", help="Specify if the chord is major"
+        "--chord_type", default="major", type=str, help="Specify if the chord is major"
     )
     if not os.path.exists("recorded"):
         os.makedirs("recorded")
     args = parser.parse_args()
-    chord_type = "major" if args.major else "minor"
+    chord_type = args.chord_type
     return chord_type
 
 
@@ -35,7 +35,7 @@ def initialize_audio_stream(channels, rate, chunk):
     return p, stream
 
 
-def record_audio(stream, wf, rate, chunk, record_seconds, templates, chord_type):
+def record_audio(stream, wf, rate, chunk, record_seconds, templates, chords):
     fig, ax = plt.subplots(figsize=(10, 5))
     x = np.arange(0, 2 * chunk, 2)
     res = []
@@ -44,7 +44,7 @@ def record_audio(stream, wf, rate, chunk, record_seconds, templates, chord_type)
     ax.set_xlim(0, chunk)
     ax.set_ylabel("Displacement")
     ax.set_xlabel("Chunk Size")
-    title = f"Real Time Audio Waveform\nDetecting {chord_type.capitalize()} Chords"
+    title = f"Real Time Audio Waveform\nDetecting Chords"
     ax.set_title(title)
 
     print("Recording...")
@@ -52,11 +52,11 @@ def record_audio(stream, wf, rate, chunk, record_seconds, templates, chord_type)
     def update(frame):
         chunk_data = stream.read(chunk, exception_on_overflow=False)
         int_data = np.frombuffer(chunk_data, dtype=np.int16) / 32768.0
-        chord, chroma_cq = recognize_chord(int_data, rate, templates)
+        chord, chroma_cq = recognize_chord(int_data, rate, templates, chords)
         wf.writeframes(chunk_data)
         line.set_ydata(int_data)
-        add_on = "m" if chord_type == "minor" else ""
-        _title = "silence" if chord == "silence" else f"chord: {chord}{add_on}"
+        # add_on = "m" if chord_type == "minor" else ""
+        _title = "silence" if chord == "silence" else f"chord: {chord}"
         ax.set_title(title + " " + _title)
 
         return line, ax
@@ -79,17 +79,13 @@ def main():
 
     p, stream = initialize_audio_stream(CHANNELS, RATE, CHUNK)
 
-    templates = (
-        get_chord_templates(chord_type=chord_type)
-        if chord_type == "minor"
-        else get_major_templates()
-    )
-
+    templates, chords = get_chord_templates(chord_type=chord_type)
+    print(chords)
     with wave.open("recorded/output.wav", "wb") as wf:
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(p.get_sample_size(FORMAT))
         wf.setframerate(RATE)
-        record_audio(stream, wf, RATE, CHUNK, RECORD_SECONDS, templates, chord_type)
+        record_audio(stream, wf, RATE, CHUNK, RECORD_SECONDS, templates, chords)
 
     stream.stop_stream()
     stream.close()

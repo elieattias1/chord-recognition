@@ -5,7 +5,7 @@ This project implements a real-time chord recognition system using audio input. 
 
 ## Features
 
-- Real-time chord recognition ([major](https://youtu.be/vzidvwVdLBQ ) and minor chords). 
+- Real-time chord recognition ([major](https://youtu.be/vzidvwVdLBQ ) and [minor](https://youtu.be/c21SsPbC8sA) chords). 
 - Real-time audio waveform visualization
 - Real-time chromatogram visualization
 

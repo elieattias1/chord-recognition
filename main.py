@@ -55,12 +55,9 @@ def record_audio(stream, wf, rate, chunk, record_seconds, templates, chord_type)
         chord, chroma_cq = recognize_chord(int_data, rate, templates)
         wf.writeframes(chunk_data)
         line.set_ydata(int_data)
-        _title = (
-            "silence"
-            if chord == "silence"
-            else f"{chord_type.capitalize()} chord: {chord}"
-        )
-        ax.set_title(title + ": " + _title)
+        add_on = "m" if chord_type == "minor" else ""
+        _title = "silence" if chord == "silence" else f"chord: {chord}{add_on}"
+        ax.set_title(title + " " + _title)
 
         return line, ax
 

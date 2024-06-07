@@ -1,10 +1,11 @@
 # Chord Recognition
 
-This project implements a real-time chord recognition system using audio input. The system uses `librosa` for audio processing and `pyaudio` for real-time audio capture. The recognized chords are displayed along with a real-time waveform and chromatogram visualization.
+This project implements a real-time chord recognition system using audio input. The system uses `librosa` for audio processing and `pyaudio` for real-time audio capture. The recognized chords are displayed along with a real-time waveform and chromatogram visualization. 
+
 
 ## Features
 
-- Real-time chord recognition (major and minor chords)
+- Real-time chord recognition ([major](https://youtu.be/vzidvwVdLBQ ) and minor chords). 
 - Real-time audio waveform visualization
 - Real-time chromatogram visualization
 

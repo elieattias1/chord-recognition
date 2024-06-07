@@ -42,7 +42,7 @@ def record_audio(stream, wf, rate, chunk, record_seconds, templates, chord_type)
     (line,) = ax.plot(x, [0] * len(x), c="b")
     ax.set_ylim(-1, 1)
     ax.set_xlim(0, chunk)
-    ax.set_ylabel("Sound Amplitude")
+    ax.set_ylabel("Displacement")
     ax.set_xlabel("Chunk Size")
     title = f"Real Time Audio Waveform\nDetecting {chord_type.capitalize()} Chords"
     ax.set_title(title)

@@ -14,7 +14,10 @@ def parse_arguments():
         description="Determine the type of chord (major or minor)"
     )
     parser.add_argument(
-        "--chord_type", default="major", type=str, help="Specify if the chord is major"
+        "--chord_type",
+        default="major",
+        type=str,
+        help="Specify if you wish to recognize major, minor or all types of chords",
     )
     if not os.path.exists("recorded"):
         os.makedirs("recorded")
